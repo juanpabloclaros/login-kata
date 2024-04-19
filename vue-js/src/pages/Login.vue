@@ -25,12 +25,11 @@ import PasswordField from "../components/PasswordField.vue";
 import Button from "../components/Button.vue";
 import { translateError } from "../utils/translateError.js";
 
-const router = useRouter();
-
 const email = ref("");
 const password = ref("");
 const errorMessage = ref("");
 const isLoading = ref(false);
+const {router} = defineProps(["router"])
 
 function onSubmit() {
   isLoading.value = true;
