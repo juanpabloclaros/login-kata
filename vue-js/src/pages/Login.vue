@@ -29,38 +29,25 @@ const email = ref("");
 const password = ref("");
 const errorMessage = ref("");
 const isLoading = ref(false);
-const {router} = defineProps(["router"])
+const {router, login} = defineProps(["router", "login"])
 
 function onSubmit() {
   isLoading.value = true;
   errorMessage.value = "";
 
-  fetch("https://backend-login-placeholder.deno.dev/api/users/login", {
-    method: "POST",
-    body: JSON.stringify({ email: email.value, password: password.value }),
-    headers: {
-      "Content-Type": "application/json",
-    },
+  login(email.value, password.value).then((payload) => {
+    localStorage.setItem("token", payload.jwt);
   })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.status === "error") {
-        throw new Error(data.code);
-      }
-      return data.payload;
-    })
-    .then((payload) => {
-      localStorage.setItem("token", payload.jwt);
-    })
-    .then(() => {
-      router.push("/recipes");
-    })
-    .catch((error) => {
-      errorMessage.value = error.message;
-    })
-    .finally(() => {
-      isLoading.value = false;
-    });
+  .then(() => {
+    router.push("/recipes");
+  })
+  .catch((error) => {
+    errorMessage.value = error.message;
+  })
+  .finally(() => {
+    isLoading.value = false;
+  });
+  
 }
 </script>
 
