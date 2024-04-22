@@ -18,7 +18,6 @@
 
 <script setup>
 import { ref } from "vue";
-import { useRouter } from "vue-router";
 import Title from "../components/Title.vue";
 import EmailField from "../components/EmailField.vue";
 import PasswordField from "../components/PasswordField.vue";
@@ -29,17 +28,24 @@ const email = ref("");
 const password = ref("");
 const errorMessage = ref("");
 const isLoading = ref(false);
-const {router, login} = defineProps(["router", "login"])
+const props = defineProps({
+  router:{
+    type: Function
+  },
+  authService:{
+    type: Function,
+  }
+})
 
 function onSubmit() {
   isLoading.value = true;
   errorMessage.value = "";
 
-  login(email.value, password.value).then((payload) => {
+  props.authService.login(email.value, password.value).then((payload) => {
     localStorage.setItem("token", payload.jwt);
   })
   .then(() => {
-    router.push("/recipes");
+    props.router.push("/recipes");
   })
   .catch((error) => {
     errorMessage.value = error.message;

@@ -9,7 +9,10 @@ describe("Login", () => {
     const router = {
       push: vi.fn()
     }
-    render(Login,{props:{router}})
+    const authService = {
+      login: async () => { return "token"}
+    }
+    render(Login,{props:{router,authService}})
     await user.type(screen.getByLabelText("Your email"),"linustorvalds@gmail.com")
     await user.type(screen.getByLabelText("Your password"),"ilovecats")
     await user.click(screen.getByRole("button",{name: "Login"}))
