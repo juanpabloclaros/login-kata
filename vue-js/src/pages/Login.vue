@@ -23,30 +23,23 @@ import EmailField from "../components/EmailField.vue";
 import PasswordField from "../components/PasswordField.vue";
 import Button from "../components/Button.vue";
 import { translateError } from "../utils/translateError.js";
+import { LoginUseCase } from "../use-cases/LoginUseCase"
 
 const email = ref("");
 const password = ref("");
 const errorMessage = ref("");
 const isLoading = ref(false);
+
 const props = defineProps({
-  router:{
-    type: Function
-  },
-  authService:{
-    type: Function,
-  }
+  loginUseCase: LoginUseCase,
 })
 
 function onSubmit() {
   isLoading.value = true;
   errorMessage.value = "";
 
-  props.authService.login(email.value, password.value).then((payload) => {
-    localStorage.setItem("token", payload.jwt);
-  })
-  .then(() => {
-    props.router.push("/recipes");
-  })
+  props.loginUseCase
+  .execute(email.value, password.value)
   .catch((error) => {
     errorMessage.value = error.message;
   })
