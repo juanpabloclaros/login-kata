@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { inject, ref } from "vue";
 import Title from "../components/Title.vue";
 import EmailField from "../components/EmailField.vue";
 import PasswordField from "../components/PasswordField.vue";
@@ -30,15 +30,17 @@ const password = ref("");
 const errorMessage = ref("");
 const isLoading = ref(false);
 
-const props = defineProps({
-  loginUseCase: LoginUseCase,
-})
+// const props = defineProps({
+//   loginUseCase: LoginUseCase,
+// })
+
+const container = inject("container")
 
 function onSubmit() {
   isLoading.value = true;
   errorMessage.value = "";
 
-  props.loginUseCase
+  container.get("LoginUseCase")
   .execute(email.value, password.value)
   .catch((error) => {
     errorMessage.value = error.message;
