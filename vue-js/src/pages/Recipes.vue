@@ -16,25 +16,14 @@
 import { ref, onMounted } from "vue";
 import Title from "../components/Title.vue";
 import RecipeCard from "../components/RecipeCard.vue";
+import {RecipiesRepositoryHttp} from "../Infrastructure/RecipesRepositoryHttp"
 
 const recipes = ref([]);
+const recipeRepository = new RecipiesRepositoryHttp()
 
 onMounted(() => {
-  fetch("https://backend-login-placeholder.deno.dev/api/recepies", {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.status === "error") {
-        throw new Error(data.code);
-      }
-      return data.payload;
-    })
-    .then((recipesData) => {
-      recipes.value = recipesData;
-    });
+  recipes.value = recipeRepository.findAll()
+  
 });
 </script>
 
